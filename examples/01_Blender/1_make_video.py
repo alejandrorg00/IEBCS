@@ -4,11 +4,11 @@
 import cv2
 import numpy as np
 import sys
-sys.path.append("./src")
+sys.path.append("../../src")
 from dat_files import load_dat_event
 
 fourcc = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
-filename = 'data/tmp/events/ev_cube.dat'
+filename = '../../data/tmp/events/ev_cube.dat'
 ts, x, y, p = load_dat_event(filename)
 res = [360, 160]
 out = cv2.VideoWriter('{}.avi'.format(filename[:-4]), fourcc, 20.0, (res[0], res[1]))

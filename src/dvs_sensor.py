@@ -99,8 +99,13 @@ class DvsSensor:
             same frequency but with a random phase
         """
         self.noise_model = NOISE_FREQ
-        self.bgn_pos_next = np.array(np.random.randint(0, self.m_bgn_pos_per, self.shape), dtype=np.uint64)
-        self.bgn_neg_next = np.array(np.random.randint(0, self.m_bgn_neg_per, self.shape), dtype=np.uint64)
+        # self.bgn_pos_next = np.array(np.random.randint(0, self.m_bgn_pos_per, self.shape), dtype=np.uint64)
+        # self.bgn_neg_next = np.array(np.random.randint(0, self.m_bgn_neg_per, self.shape), dtype=np.uint64)
+        rng = np.random.default_rng()
+        high_p = int(self.m_bgn_pos_per)  # puede ser > 2^31-1
+        high_n = int(self.m_bgn_neg_per)
+        self.bgn_pos_next = rng.integers(0, high_p, size=self.shape, dtype=np.uint64)
+        self.bgn_neg_next = rng.integers(0, high_n, size=self.shape, dtype=np.uint64)
 
     def init_bgn_hist(self, filename_noise_pos, filename_noise_neg):
         """ Load measured distributions of the noise,

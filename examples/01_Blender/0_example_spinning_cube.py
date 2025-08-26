@@ -1,16 +1,18 @@
+# %%
 # Joubert Damien, 03-02-2020
 import bpy
 from mathutils import Vector
 import cv2
 import math
 import os, sys
-sys.path.append("./src")
+sys.path.append("../../src")
 from dvs_sensor import *
 from dvs_sensor_blender import Blender_DvsSensor
 from event_display import EventDisplay
 
+from pathlib import Path
 
-path_Cube = os.path.abspath(os.getcwd()) + "/data/"
+path_Cube = str(Path(__file__).resolve().parents[2] / "data") + os.sep
 
 if not os.path.exists(path_Cube + "tmp"):
     os.mkdir(path_Cube + "tmp")
@@ -45,7 +47,7 @@ for node in nodes:
     nodes.remove(node)
 texture = bpy.data.textures.new(texname, 'IMAGE')
 texture.extension = 'REPEAT'
-texture.image = bpy.data.images.load("./examples/01_Blender/CheeseTextureImg.png")
+texture.image = bpy.data.images.load('//CheeseTextureImg.png')
 shader_node = nodes.new(type='ShaderNodeBsdfPrincipled')
 shader_node.location = (0, 0)
 texture_node = nodes.new(type='ShaderNodeTexImage')
@@ -69,9 +71,9 @@ ppsee.set_dvs_sensor(th_pos=0.15, th_neg=0.15, th_n=0.05, lat=500, tau=300, jit=
 ppsee.set_sensor_optics(8)
 ppsee.set_angle([math.pi, 0.0, 0.0])
 ppsee.set_position([0.0, 0.0, 0.0])
-ppsee.set_speeds([0.0, 0, 0], [0.0, 0.0, 10])
+ppsee.set_speeds([0.0, 0, 0], [0.0, 0.0, 10]) # camera rotates
 ppsee.init_thresholds()
-ppsee.init_bgn_hist("./data/noise_pos_161lux.npy", "./data/noise_neg_161lux.npy")
+ppsee.init_bgn_hist("../../data/noise_pos_161lux.npy", "../../data/noise_neg_161lux.npy")
 
 # Define the scene
 scene = bpy.context.scene
@@ -109,7 +111,7 @@ for p in range(0, num_frames, 1):
         pk = ppsee.update(im, 1000)
         ed.update(pk, 1000)
         ev.increase_ev(pk)
-        bpy.data.objects['Light'].data.energy += 0.01
+        bpy.data.objects['Light'].data.energy += 0.01 # light changes
     cv2.imshow("Blender", im)
     cv2.waitKey(1)
 out.release()
